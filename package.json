@@ -1,0 +1,23 @@
+{
+  "name": "mongodb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kanchankk11/MongoDB.git"
+  },
+  "keywords": [],
+  "author": "Kanchan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kanchankk11/MongoDB/issues"
+  },
+  "homepage": "https://github.com/kanchankk11/MongoDB#readme",
+  "dependencies": {
+    "mongoose": "^6.8.3"
+  }
+}
