@@ -34,7 +34,72 @@ const studentSchema = mongoose.Schema({
 //! MODEL
 //? Model is the basically the table in RDBMS, now we have Schema we will create Model
 
-const studentModel = new mongoose.model("Student",studentSchema);   //* (modelName, schemaName)
+const Student = new mongoose.model("Student",studentSchema);   //* (modelName, schemaName)
 //! NOTE : the model name in MongoDB will be in plural form, for this case it will be "students" not "Student"
 
 //*     CRUD Operation 
+
+const setData = async () => {
+    try {
+        const std1 = new Student({
+            roll : 3,
+            name : "XYZ",
+            marks : 74
+        });
+
+        const std2 = new Student({
+            roll : 4,
+            name : "ABC",
+            marks : 84
+        });
+
+        const std3 = new Student({
+            roll : 5,
+            name : "PQR",
+            marks : 79
+        });
+        //! for single data
+        //* const res = await std1.save();
+
+        //! for multiple data
+
+       // const res = await Student.insertMany([std1,std2,std3]);
+       // console.log(res);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+setData();
+
+//! Read / Fetch data from DB
+
+const getData = async () => {
+    //! get all the data from DB
+    // const result = await Student.find();
+
+    //! filtering data
+    //const result = await Student.find({roll : 2});
+
+
+    //! filtering field
+    //const result = await Student.find({roll : 1}).select({name :1, _id : 0})
+
+    //? find().select(fieldName : 1 ) - shows the field
+    //? find.select(fieldName : 0) - exclude the field
+
+    //! filtering using realtion operator gt, eq, gte, lt, lte, in, ne, nin
+
+    //const result = await Student.find({marks : {$gt: 80}}).select({name : 1, _id : 0});
+    //? Here result will consist the names of those students whose marks are > 80
+    
+    //! filtering using logical operator $and, $or, $not, $nor
+
+    const result = await Student.find({$and : [{marks : {$gt : 80}},{present : true}]}).select({name : 1, _id : 0})
+    //? Here the result will consist the names of those students who have marks > 80 and are present
+    
+    console.log(result);
+}
+
+
+getData();
