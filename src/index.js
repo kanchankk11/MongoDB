@@ -21,10 +21,23 @@ const studentSchema = mongoose.Schema({
     //* field : Datatype
     roll : {
         type : Number,
-        required : true         //* Mandatory
+        required : true ,   //* Mandatory
+        unique : true        //PK
     },
-    name : String,
-    marks : Number,
+    name : {
+        type : String,
+        required : true,
+        trim : true         //* trims extra spaces
+        //? Other validators are - lowercase, uppercase, match, minlength, maxlength, enum
+    },
+    marks : {
+        type : Number,
+        validate(value){    //* Custom validation
+            if(value < 0){
+                throw new Error("Marks cannot be negative")
+            }
+        }
+    },
     present : {
         type : Boolean,
         default : false         //* default value
@@ -42,35 +55,35 @@ const Student = new mongoose.model("Student",studentSchema);   //* (modelName, s
 const setData = async () => {
     try {
         const std1 = new Student({
-            roll : 3,
-            name : "XYZ",
-            marks : 74
+            roll : 6,
+            name : "RST",
+            marks : 65
         });
 
         const std2 = new Student({
-            roll : 4,
-            name : "ABC",
-            marks : 84
+            roll : 7,
+            name : "UVW",
+            marks : 89
         });
 
         const std3 = new Student({
-            roll : 5,
-            name : "PQR",
-            marks : 79
+            roll : 2,
+            name : "BCD",
+            marks : 72
         });
         //! for single data
         //* const res = await std1.save();
 
         //! for multiple data
 
-       // const res = await Student.insertMany([std1,std2,std3]);
-       // console.log(res);
+        const res = await Student.insertMany([std1,std2,std3]);
+       console.log(res);
     } catch (error) {
         console.log(error);
     }
 }
 
-setData();
+//setData();        //* Calling setData() method
 
 //! Read / Fetch data from DB
 
@@ -95,11 +108,46 @@ const getData = async () => {
     
     //! filtering using logical operator $and, $or, $not, $nor
 
-    const result = await Student.find({$and : [{marks : {$gt : 80}},{present : true}]}).select({name : 1, _id : 0})
+    //const result = await Student.find({$and : [{marks : {$gt : 80}},{present : true}]}).select({name : 1, _id : 0})
     //? Here the result will consist the names of those students who have marks > 80 and are present
+    
+
+    //! Counting no. of records
+    //const result = await Student.find({marks : {$gt: 80}}).countDocuments();
+    //! NOTE - .count() method is deprecated
+
+    //! Sorting the fetched result
+    const result = await Student.find({marks : {$gt: 80}}).sort({name : 1});
+    //? sort({field : value})  -> 1 for ascending, -1 for descending
+
     
     console.log(result);
 }
 
+getData();      //* calling getData() method
 
-getData();
+//! Updating data
+const updateData = async (rollNo) => {
+    try {
+        const result = await Student.updateOne({roll : rollNo}, {
+            $set : {present : true}
+        });
+
+        console.log(result);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+//updateData(2);       // calling updateData() method
+
+//! Deleting data
+const deleteData = async (rollNo) => {
+    try {
+        const result = await Student.deleteOne({roll : rollNo})
+        console.log(result);
+    } catch (error) {
+        console.log(error);
+    }
+}
+//deleteData(2);
